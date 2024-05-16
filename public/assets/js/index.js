@@ -1,8 +1,5 @@
-let noteTitle;
-let noteText;
-let saveNoteBtn;
-let newNoteBtn;
-let noteList = document.querySelectorAll('.note-list');
+let noteTitle, noteText, saveNoteBtn, newNoteBtn;
+let [noteList] = document.querySelectorAll('.note-list');
 let activeNote = {};
 
 const show = (elem) => {
@@ -14,22 +11,22 @@ const hide = (elem) => {
 };
 
 const getNotes = () => {
-    return fetch('/api/notes', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch notes');
-        }
-        return response.json();
-    })
-    .catch(error => {
-        console.error('Error fetching notes:', error);
-        return [];
-    });
+  return fetch('/api/notes', {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('Failed to fetch notes');
+      }
+      return response.json();
+  })
+  .catch(error => {
+      console.error('Error fetching notes:', error);
+      return [];
+  });
 };
 
 const saveNote = (note) => {
@@ -53,14 +50,14 @@ const deleteNote = (id) => {
 
 const renderNoteList = (notes) => {
     if (!notes || notes.length === 0) {
-        noteList.forEach((el) => (el.innerHTML = ''));
-        noteList[0].append(createLi('No saved Notes', false));
+        noteList.innerHTML = '';
+        noteList.append(createLi('No saved Notes', false));
     } else {
-        noteList.forEach((el) => (el.innerHTML = ''));
+        noteList.innerHTML = '';
         notes.forEach((note) => {
             const li = createLi(note.title);
             li.dataset.note = JSON.stringify(note);
-            noteList[0].append(li);
+            noteList.append(li);
         });
     }
 };
@@ -102,5 +99,3 @@ const getAndRenderNotes = () => {
 
 // Call the function to fetch and render notes
 getAndRenderNotes();
-
-

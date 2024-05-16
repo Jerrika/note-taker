@@ -4,13 +4,21 @@ let saveNoteBtn;
 let newNoteBtn;
 let noteList;
 
-if (window.location.pathname === '/notes') {
-  noteTitle = document.querySelector('.note-title');
-  noteText = document.querySelector('.note-textarea');
-  saveNoteBtn = document.querySelector('.save-note');
-  newNoteBtn = document.querySelector('.new-note');
-  noteList = document.querySelectorAll('.list-container .list-group');
-}
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.location.pathname === '/notes') {
+    noteTitle = document.querySelector('.note-title');
+    noteText = document.querySelector('.note-textarea');
+    saveNoteBtn = document.querySelector('.save-note');
+    newNoteBtn = document.querySelector('.new-note');
+    noteList = document.querySelectorAll('.list-container .list-group');
+    
+    saveNoteBtn.addEventListener('click', handleNoteSave);
+    newNoteBtn.addEventListener('click', handleNewNoteView);
+    noteTitle.addEventListener('keyup', handleRenderSaveBtn);
+    noteText.addEventListener('keyup', handleRenderSaveBtn);
+  }
+});
+
 
 // Show an element
 const show = (elem) => {
@@ -25,13 +33,23 @@ const hide = (elem) => {
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
-const getNotes = () =>
-  fetch('/api/notes', {
+const getNotes = () => {
+  return fetch('/api/notes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to fetch notes');
+    }
+    return response.json();
+  })
+  .catch(error => {
+    console.error('Error fetching notes:', error);
   });
+};
 
 const saveNote = (note) =>
   fetch('/api/notes', {
@@ -71,9 +89,13 @@ const handleNoteSave = () => {
     title: noteTitle.value,
     text: noteText.value,
   };
-  saveNote(newNote).then(() => {
+  saveNote(newNote)
+  .then(() => {
     getAndRenderNotes();
     renderActiveNote();
+  })
+  .catch(error => {
+    console.error('Error saving note:', error);
   });
 };
 
@@ -159,10 +181,13 @@ const renderNoteList = async (notes) => {
   }
 
   jsonNotes.forEach((note) => {
-    const li = createLi(note.title);
-    li.dataset.note = JSON.stringify(note);
-
-    noteListItems.push(li);
+    try {
+      const li = createLi(note.title);
+      li.dataset.note = JSON.stringify(note);
+      noteListItems.push(li);
+    } catch (error) {
+      console.error('Error creating list item:', error);
+    }
   });
 
   if (window.location.pathname === '/notes') {

@@ -9,8 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static("public"));
-app.use("/",html_routes);
-app.use("./route", barrel);
+app.use("", barrel);
 
 
 

@@ -11,9 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     saveNoteBtn = document.querySelector('.save-note');
     newNoteBtn = document.querySelector('.new-note');
     noteList = document.querySelectorAll('.list-container .list-group');
+    apiRouter = document.querySelector('.api-routes')
     
     saveNoteBtn.addEventListener('click', handleNoteSave);
     newNoteBtn.addEventListener('click', handleNewNoteView);
+    apiRouter.addEventListener('click', handleNewNoteView);
+
     noteTitle.addEventListener('keyup', handleRenderSaveBtn);
     noteText.addEventListener('keyup', handleRenderSaveBtn);
   }
@@ -34,7 +37,7 @@ const hide = (elem) => {
 let activeNote = {};
 
 const getNotes = () => {
-  return fetch('/api/notes', {
+  return fetch('/notes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

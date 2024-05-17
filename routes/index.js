@@ -1,13 +1,8 @@
 const router = require('express').Router();
+const apiRouter = require('./api-routes');
+const htmlRouter = require('./html-routes');
 
-const deletionRouter = require('./deletion');
-const creationRouter = require('./creation');
-const readRouter = require('./read');
-const updateRouter = require('./update');
-
-router.use('/deletion', deletionRouter);
-router.use('/creation', creationRouter);
-router.use('/read', readRouter);
-router.use('/update', updateRouter);
+router.use('/api-routes', apiRouter);
+router.use('/html-routes', htmlRouter);
 
 module.exports = router;

@@ -140,10 +140,12 @@ const handleRenderSaveBtn = () => {
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
-  let jsonNotes = await notes.json();
-  if (window.location.pathname === '/notes') {
-    noteList.forEach((el) => (el.innerHTML = ''));
-  }
+  let jsonNotes;
+if (notes) {
+    jsonNotes = await notes.json();
+} else {
+    console.log("Notes object is undefined or null");
+}
 
   let noteListItems = [];
 
@@ -176,19 +178,24 @@ const renderNoteList = async (notes) => {
     return liEl;
   };
 
-  if (jsonNotes.length === 0) {
-    noteListItems.push(createLi('No saved Notes', false));
-  }
+  
+  if (notes) {
+    jsonNotes = await notes.json();
+} else {
+    console.log("Notes object is undefined or null");
+}
 
-  jsonNotes.forEach((note) => {
-    try {
-      const li = createLi(note.title);
-      li.dataset.note = JSON.stringify(note);
-      noteListItems.push(li);
-    } catch (error) {
-      console.error('Error creating list item:', error);
-    }
-  });
+if (jsonNotes) {
+    jsonNotes.forEach((note) => {
+        try {
+            const li = createLi(note.title);
+            li.dataset.note = JSON.stringify(note);
+            noteListItems.push(li);
+        } catch (error) {
+            console.error('Error creating list item:', error);
+        }
+    });
+}
 
   if (window.location.pathname === '/notes') {
     noteListItems.forEach((note) => noteList[0].append(note));
